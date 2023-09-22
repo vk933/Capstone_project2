@@ -1,0 +1,231 @@
+[cloudera@quickstart Desktop]$ mysql -u user -p
+Enter password: 
+ERROR 1045 (28000): Access denied for user 'user'@'localhost' (using password: YES)
+[cloudera@quickstart Desktop]$ mysql -u root -p
+Enter password: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 3
+Server version: 5.1.66 Source distribution
+
+Copyright (c) 2000, 2012, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases ;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| cm                 |
+| export_hadoop      |
+| export_hadoop2     |
+| export_hdfs        |
+| firehose           |
+| hue                |
+| metastore          |
+| mysql              |
+| nav                |
+| navms              |
+| oozie              |
+| project            |
+| retail_db          |
+| rman               |
+| sentry             |
++--------------------+
+16 rows in set (1.19 sec)
+
+mysql> create database nexturn_project ;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> show databases ;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| cm                 |
+| export_hadoop      |
+| export_hadoop2     |
+| export_hdfs        |
+| firehose           |
+| hue                |
+| metastore          |
+| mysql              |
+| nav                |
+| navms              |
+| nexturn_project    |
+| oozie              |
+| project            |
+| retail_db          |
+| rman               |
+| sentry             |
++--------------------+
+17 rows in set (0.00 sec)
+
+mysql> use nexturn_project;
+Database changed
+mysql> create table us_accidents(ID varchar(50),Source varchar(100),Severity int,Start_Time varchar(100),End_Time varchar(100),Start_Lat float,Start_Lng float,End_Lat varchar(100),End_Lng varchar(100),Distance(mi) float,Description varchar(500),City varchar(100),Country varchar(100),State varchar(100),Zipcode varchar(100),Weather_Condition varchar(100));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(mi) float,Description varchar(500),City varchar(100),Country varchar(100),State' at line 1
+mysql> create table us_accidents(ID varchar(50),Source varchar(100),Severity int,Start_Time varchar(100),End_Time varchar(100),Start_Lat Decimal,Start_Lng Decimal,End_Lat varchar(100),End_Lng varchar(100),Distance(mi) Decimal,Description varchar(500),City varchar(100),Country varchar(100),State varchar(100),Zipcode varchar(100),Weather_Condition varchar(100));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(mi) Decimal,Description varchar(500),City varchar(100),Country varchar(100),Sta' at line 1
+mysql> create table us_accidents(ID varchar(50),Source varchar(100),Severity int,Start_Time varchar(100),End_Time varchar(100),Start_Lat Decimal,Start_Lng Decimal,End_Lat varchar(100),End_Lng varchar(100),Distance  Decimal,Description varchar(500),City varchar(100),Country varchar(100),State varchar(100),Zipcode varchar(100),Weather_Condition varchar(100));
+Query OK, 0 rows affected (0.45 sec)
+
+mysql> show tables;
++---------------------------+
+| Tables_in_nexturn_project |
++---------------------------+
+| us_accidents              |
++---------------------------+
+1 row in set (0.00 sec)
+
+mysql> describe us_accidents ;
++-------------------+---------------+------+-----+---------+-------+
+| Field             | Type          | Null | Key | Default | Extra |
++-------------------+---------------+------+-----+---------+-------+
+| ID                | varchar(50)   | YES  |     | NULL    |       |
+| Source            | varchar(100)  | YES  |     | NULL    |       |
+| Severity          | int(11)       | YES  |     | NULL    |       |
+| Start_Time        | varchar(100)  | YES  |     | NULL    |       |
+| End_Time          | varchar(100)  | YES  |     | NULL    |       |
+| Start_Lat         | decimal(10,0) | YES  |     | NULL    |       |
+| Start_Lng         | decimal(10,0) | YES  |     | NULL    |       |
+| End_Lat           | varchar(100)  | YES  |     | NULL    |       |
+| End_Lng           | varchar(100)  | YES  |     | NULL    |       |
+| Distance          | decimal(10,0) | YES  |     | NULL    |       |
+| Description       | varchar(500)  | YES  |     | NULL    |       |
+| City              | varchar(100)  | YES  |     | NULL    |       |
+| Country           | varchar(100)  | YES  |     | NULL    |       |
+| State             | varchar(100)  | YES  |     | NULL    |       |
+| Zipcode           | varchar(100)  | YES  |     | NULL    |       |
+| Weather_Condition | varchar(100)  | YES  |     | NULL    |       |
++-------------------+---------------+------+-----+---------+-------+
+16 rows in set (0.03 sec)
+
+mysql> load data infile '/home/cloudera/Desktop/nexturn_project' into table us_accidents  fields terminated by ',' lines terminated by '\n';
+ERROR 1085 (HY000): The file '/home/cloudera/Desktop/nexturn_project' must be in the database directory or be readable by all
+mysql> load data infile '/home/cloudera/Desktop/nexturn_project/US.accidents.csv' into table us_accidents  fields terminated by ',' lines terminated by '\n';
+ERROR 13 (HY000): Can't get stat of '/home/cloudera/Desktop/nexturn_project/US.accidents.csv' (Errcode: 2)
+mysql> load data infile '/home/cloudera/Desktop/nexturn_project/US.accidents.csv' into table us_accidents  fields terminated by ',' lines terminated by '\n';
+ERROR 13 (HY000): Can't get stat of '/home/cloudera/Desktop/nexturn_project/US.accidents.csv' (Errcode: 2)
+mysql> load data infile chmod 777 '/home/cloudera/Desktop/nexturn_project/US.accidents.csv' into table us_accidents  fields terminated by ',' lines terminated by '\n';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'chmod 777 '/home/cloudera/Desktop/nexturn_project/US.accidents.csv' into table u' at line 1
+mysql> load data infile chmod 755 '/home/cloudera/Desktop/nexturn_project/US.accidents.csv' into table us_accidents  fields terminated by ',' lines terminated by '\n';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'chmod 755 '/home/cloudera/Desktop/nexturn_project/US.accidents.csv' into table u' at line 1
+mysql> load data infile  '/home/cloudera/Desktop/nexturn_project/US.accidents.csv' into table us_accidents  fields terminated by ',' lines terminated by '\n';
+ERROR 13 (HY000): Can't get stat of '/home/cloudera/Desktop/nexturn_project/US.accidents.csv' (Errcode: 2)
+mysql> load data infile chmod 755 '/home/cloudera/Desktop/nexturn_project/US.accidents.csv' into table us_accidents  fields terminated by ',' lines terminated by '\n' IGNORE 1 LINES ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'chmod 755 '/home/cloudera/Desktop/nexturn_project/US.accidents.csv' into table u' at line 1
+mysql> load data infile  '/home/cloudera/Desktop/nexturn_project/US.accidents.csv' into table us_accidents  fields terminated by ',' lines terminated by '\n' IGNORE 1 LINES ;
+ERROR 13 (HY000): Can't get stat of '/home/cloudera/Desktop/nexturn_project/US.accidents.csv' (Errcode: 2)
+mysql> DROP TABLE US_ACCIDENTS;
+ERROR 1051 (42S02): Unknown table 'US_ACCIDENTS'
+mysql> drop table us_accidents;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> show tables ;
+Empty set (0.01 sec)
+
+mysql> create table us_accidents(
+    -> ID VARCHAR(255) PRIMARY KEY,
+    -> Source VARCHAR(50),
+    -> Severity INT,
+    -> Start_Time TIMESTAMP,
+    -> End_Time TIMESTAMP,
+    -> Start_Lat DECIMAL(10,6),
+    -> Start_Lng DECIMAL(10,6),
+    -> End_Lat DECIMAL(10,6),
+    -> End_Lng DECIMAL(10,6),
+    -> Distance DECIMAL(10,3)
+    -> ,
+    -> Description VARCHAR(100000),
+    -> City VARCHAR(100),
+    -> Country VARCHAR(100),
+    -> State VARCHAR(30),
+    -> Zipcode VARCHAR(10),
+    -> Weather_Condition VARCHAR(100)
+    -> );
+Query OK, 0 rows affected, 1 warning (0.07 sec)
+
+mysql> load data infile  '/home/cloudera/Desktop/nexturn_project/US.accidents.csv' into table us_accidents  fields terminated by ',' lines terminated by '\n' IGNORE 1 LINES ;
+ERROR 13 (HY000): Can't get stat of '/home/cloudera/Desktop/nexturn_project/US.accidents.csv' (Errcode: 2)
+mysql> load data infile  '/home/cloudera/project/US_accidents' into table us_accidents  fields terminated by ',' lines terminated by '\n' IGNORE 1 LINES ;ERROR 13 (HY000): Can't get stat of '/home/cloudera/project/US_accidents' (Errcode: 2)
+mysql> load data infile  '/home/cloudera/project/US_accidents' into table us_accidents  fields terminated by ',' lines terminated by '\n' ;
+ERROR 13 (HY000): Can't get stat of '/home/cloudera/project/US_accidents' (Errcode: 2)
+mysql> LOAD DATA INFILE  '/home/cloudera/project/US_accidents' INTO TABLE us_accidents  fields terminated by ',' lines terminated by '\n' ;
+ERROR 13 (HY000): Can't get stat of '/home/cloudera/project/US_accidents' (Errcode: 2)
+mysql> LOAD DATA INFILE  '/home/cloudera/project/US_accidents' INTO TABLE us_accidents  fields terminated by ',' lines terminated by '\n'IGONRE 1 LINES ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'IGONRE 1 LINES' at line 1
+mysql> LOAD DATA INFILE  '/home/cloudera/project/US_accidents' INTO TABLE us_accidents  fields terminated by ',' lines terminated by '\n' IGONRE 1 LINES  ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'IGONRE 1 LINES' at line 1
+mysql> LOAD DATA INFILE  '/home/cloudera/project/US_accidents' INTO TABLE us_accidents  fields terminated by ',' lines terminated by '\n' IGNORE 1 LINES  ;
+ERROR 13 (HY000): Can't get stat of '/home/cloudera/project/US_accidents' (Errcode: 2)
+mysql> SHOW TABLES;
++---------------------------+
+| Tables_in_nexturn_project |
++---------------------------+
+| us_accidents              |
++---------------------------+
+1 row in set (0.00 sec)
+
+mysql> LOAD DATA INFILE  '/home/cloudera/project/US_accidents' INTO TABLE us_accidents  fields terminated by ',' lines terminated by '\n' IGNORE 1 LINES  ;
+ERROR 13 (HY000): Can't get stat of '/home/cloudera/project/US_accidents' (Errcode: 2)
+mysql> ls
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'ls' at line 1
+mysql> LOAD DATA INFILE  '/home/cloudera/project/US_accident' INTO TABLE us_accidents  fields terminated by ',' lines terminated by '\n' IGNORE 1 LINES  ;
+Query OK, 2000 rows affected, 12797 warnings (0.12 sec)
+Records: 2000  Deleted: 0  Skipped: 0  Warnings: 6797
+
+mysql> select *from us_accidents limit 10;
++----+--------+----------+---------------------+---------------------+-------------+-----------+------------+----------+----------+-------------+----------------------------------------------------------------------------------------------------+---------------------------+--------------+------------+-------------------+
+| ID | Source | Severity | Start_Time          | End_Time            | Start_Lat   | Start_Lng | End_Lat    | End_Lng  | Distance | Description | City                                                                                               | Country                   | State        | Zipcode    | Weather_Condition |
++----+--------+----------+---------------------+---------------------+-------------+-----------+------------+----------+----------+-------------+----------------------------------------------------------------------------------------------------+---------------------------+--------------+------------+-------------------+
+| 0  | A-1    |        0 | 0000-00-00 00:00:00 | 2016-02-08 05:46:00 | 2016.000000 | 39.865147 | -84.058723 | 0.000000 |    0.000 | 0.01        | Right lane blocked due to accident on I-70 Eastbound at Exit 41 OH-235 State Route 4.              | I-70 E                    | Dayton       | Montgomery | OH                |
+| 1  | A-2    |        0 | 0000-00-00 00:00:00 | 2016-02-08 06:07:59 | 2016.000000 | 39.928059 | -82.831184 | 0.000000 |    0.000 | 0.01        | Accident on Brice Rd at Tussing Rd. Expect delays.                                                 | Brice Rd                  | Reynoldsburg | Franklin   | OH                |
+| 2  | A-3    |        0 | 0000-00-00 00:00:00 | 2016-02-08 06:49:27 | 2016.000000 | 39.063148 | -84.032608 | 0.000000 |    0.000 | 0.01        | Accident on OH-32 State Route 32 Westbound at Dela Palma Rd. Expect delays.                        | State Route 32            | Williamsburg | Clermont   | OH                |
+| 3  | A-4    |        0 | 0000-00-00 00:00:00 | 2016-02-08 07:23:34 | 2016.000000 | 39.747753 | -84.205582 | 0.000000 |    0.000 | 0.01        | Accident on I-75 Southbound at Exits 52 52B US-35. Expect delays.                                  | I-75 S                    | Dayton       | Montgomery | OH                |
+| 4  | A-5    |        0 | 0000-00-00 00:00:00 | 2016-02-08 07:39:07 | 2016.000000 | 39.627781 | -84.188354 | 0.000000 |    0.000 | 0.01        | Accident on McEwen Rd at OH-725 Miamisburg Centerville Rd. Expect delays.                          | Miamisburg Centerville Rd | Dayton       | Montgomery | OH                |
+| 5  | A-6    |        0 | 0000-00-00 00:00:00 | 2016-02-08 07:44:26 | 2016.000000 | 40.100590 | -82.925194 | 0.000000 |    0.000 | 0.01        | Accident on I-270 Outerbelt Northbound near Exit 29 OH-3 State St. Expect delays.                  | Westerville Rd            | Westerville  | Franklin   | OH                |
+| 6  | A-7    |        0 | 0000-00-00 00:00:00 | 2016-02-08 07:59:35 | 2016.000000 | 39.758274 | -84.230507 | 0.000000 |    0.000 | 0.0         | Accident on Oakridge Dr at Woodward Ave. Expect delays.                                            | N Woodward Ave            | Dayton       | Montgomery | OH                |
+| 7  | A-8    |        0 | 0000-00-00 00:00:00 | 2016-02-08 07:59:58 | 2016.000000 | 39.770382 | -84.194901 | 0.000000 |    0.000 | 0.01        | Accident on I-75 Southbound at Exit 54B Grand Ave. Expect delays.                                  | N Main St                 | Dayton       | Montgomery | OH                |
+| 8  | A-9    |        0 | 0000-00-00 00:00:00 | 2016-02-08 08:00:40 | 2016.000000 | 39.778061 | -84.172005 | 0.000000 |    0.000 | 0.0         | Accident on Notre Dame Ave at Warner Ave. Expect delays.                                           | Notre Dame Ave            | Dayton       | Montgomery | OH                |
+| 9  | A-10   |        0 | 0000-00-00 00:00:00 | 2016-02-08 08:10:04 | 2016.000000 | 40.100590 | -82.925194 | 0.000000 |    0.000 | 0.01        | Right hand shoulder blocked due to accident on I-270 Outerbelt Westbound at Exit 29 OH-3 State St. | Westerville Rd            | Westerville  | Franklin   | OH                |
++----+--------+----------+---------------------+---------------------+-------------+-----------+------------+----------+----------+-------------+----------------------------------------------------------------------------------------------------+---------------------------+--------------+------------+-------------------+
+10 rows in set (0.00 sec)
+
+mysql> create table full_data(
+    -> ID VARCHAR(255) PRIMARY KEY,
+    -> Source VARCHAR(50),
+    -> Severity INT,
+    -> Start_Time TIMESTAMP,
+    -> End_Time TIMESTAMP,
+    -> Start_Lat DECIMAL(10,6),
+    -> Start_Lng DECIMAL(10,6),
+    -> End_Lat DECIMAL(10,6),
+    -> End_Lng DECIMAL(10,6),
+    -> Distance DECIMAL(10,3),
+    -> Description VARCHAR(100000),
+    -> City VARCHAR(100),
+    -> Country VARCHAR(100),
+    -> State VARCHAR(30),
+    -> Zipcode VARCHAR(10),
+    -> Weather_Condition VARCHAR(100)
+    -> );
+Query OK, 0 rows affected, 1 warning (0.07 sec)
+
+mysql> LOAD DATA INFILE  '/home/cloudera/project/US_Accident_All' INTO TABLE full_data  fields terminated by ',' lines terminated by '\n' IGNORE 1 LINES  ;
+ERROR 13 (HY000): Can't get stat of '/home/cloudera/project/US_Accident_All' (Errcode: 2)
+mysql> LOAD DATA INFILE  '/home/cloudera/projects/US_Accident_All' INTO TABLE full_data  fields terminated by ',' lines terminated by '\n' IGNORE 1 LINES  ;
+ERROR 13 (HY000): Can't get stat of '/home/cloudera/projects/US_Accident_All' (Errcode: 2)
+mysql> LOAD DATA INFILE  '/home/cloudera/projects/US_Accidents_All' INTO TABLE full_data  fields terminated by ',' lines terminated by '\n' IGNORE 1 LINES  ;
+ERROR 13 (HY000): Can't get stat of '/home/cloudera/projects/US_Accidents_All' (Errcode: 2)
+mysql> LOAD DATA INFILE  '/home/cloudera/projects/US_Accidents_all' INTO TABLE full_data  fields terminated by ',' lines terminated by '\n' IGNORE 1 LINES  ;
+ERROR 13 (HY000): Can't get stat of '/home/cloudera/projects/US_Accidents_all' (Errcode: 2)
+mysql> LOAD DATA INFILE  '/home/cloudera/project/US_Accidents_all' INTO TABLE full_data  fields terminated by ',' lines terminated by '\n' IGNORE 1 LINES  ;
+
+;
+

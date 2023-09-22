@@ -1,0 +1,167 @@
+hive> show databases ;
+OK
+aditya
+capstone_project
+default
+project
+Time taken: 0.962 seconds, Fetched: 4 row(s)
+hive> show databases ;
+OK
+aditya
+capstone_project
+default
+project
+Time taken: 0.052 seconds, Fetched: 4 row(s)
+hive> create database output_data ;
+OK
+
+hive> create table top_five_city(city string,total_accidents int)
+    > ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+    > TBLPROPERTIES ("skip.header.line.count"="1");
+OK
+Time taken: 1.712 seconds
+hive> describe top_five_city ;
+OK
+city                    string
+total_accidents         int
+Time taken: 0.51 seconds, Fetched: 2 row(s)
+hive> LOAD DATA INPATH '/output/top_five_city.csv/*.csv' INTO TABLE output_data.top_five_city
+    > ;
+Loading data to table output_data.top_five_city
+OK
+Time taken: 0.999 seconds
+hive> select *from top_five_city ;
+OK
+Miami   2352
+Houston 2304
+Los Angeles     1999
+Charlotte       1801
+Dallas  1759
+Time taken: 3.121 seconds, Fetched: 5 row(s)
+hive> show tables ;
+OK
+top_five_city
+Time taken: 0.077 seconds, Fetched: 1 row(s)
+hive>
+
+hive> create table top_five_city(city string,total_accidents int)
+    > ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+    > TBLPROPERTIES ("skip.header.line.count"="1");
+OK
+Time taken: 1.712 seconds
+hive> describe top_five_city ;
+OK
+city                    string
+total_accidents         int
+Time taken: 0.51 seconds, Fetched: 2 row(s)
+hive> LOAD DATA INPATH '/output/top_five_city.csv/*.csv' INTO TABLE output_data.top_five_city
+    > ;
+Loading data to table output_data.top_five_city
+OK
+Time taken: 0.999 seconds
+hive> select *from top_five_city ;
+OK
+Miami   2352
+Houston 2304
+Los Angeles     1999
+Charlotte       1801
+Dallas  1759
+Time taken: 3.121 seconds, Fetched: 5 row(s)
+hive> show tables ;
+OK
+top_five_city
+Time taken: 0.077 seconds, Fetched: 1 row(s)
+hive> create table top_three_state(state string,total_state_accidents int)
+    > ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+    > TBLPROPERTIES ("skip.header.line.count"="1");
+OK
+Time taken: 0.145 seconds
+hive> LOAD DATA INPATH '/output/top_three_state/*.csv' INTO TABLE output_data.top_three_state
+    > ;
+Loading data to table output_data.top_three_state
+OK
+Time taken: 0.418 seconds
+hive> select *from top_three_state ;
+OK
+CA      22347
+FL      11051
+TX      7668
+Time taken: 0.284 seconds, Fetched: 3 row(s)
+hive> create table year_wise_accidents(accident_year int,total_accidents_yearwise int)
+    > ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+    > TBLPROPERTIES ("skip.header.line.count"="1");
+OK
+Time taken: 0.128 seconds
+hive> LOAD DATA INPATH '/output/year_wise_accidents/*.csv' INTO TABLE output_data.year_wise_accidents
+    > ;
+Loading data to table output_data.year_wise_accidents
+OK
+Time taken: 0.545 seconds
+hive> select *from year_wise_accidents ;
+OK
+2016    5370
+2017    9297
+2018    11493
+2019    12257
+2020    15267
+2021    20418
+2022    22815
+2023    3083
+Time taken: 0.274 seconds, Fetched: 8 row(s)
+hive> create table weather_impact(weather_condition string,total_weather_accidents int )
+    > ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+    > TBLPROPERTIES ("skip.header.line.count"="1");
+OK
+Time taken: 0.112 seconds
+hive> LOAD DATA INPATH '/output/weather_impact/*.csv' INTO TABLE output_data.weather_impact
+    > ;
+Loading data to table output_data.weather_impact
+OK
+Time taken: 0.331 seconds
+hive> select *from weather_impact ;
+OK
+Fair    32971
+Mostly Cloudy   13088
+Clear   10617
+Cloudy  10502
+Partly Cloudy   9188
+Overcast        4927
+Light Rain      4492
+Scattered Clouds        2688
+""      2216
+Light Snow      1670
+Time taken: 0.241 seconds, Fetched: 10 row(s)
+hive> create table hotspot_place_accidents(county string,state string,city string,total_country_accidents int)
+    > ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+    > TBLPROPERTIES ("skip.header.line.count"="1");
+OK
+Time taken: 0.083 seconds
+hive> LOAD DATA INPATH '/output/hotspot_place_accidents/*.csv' INTO TABLE output_data.hotspot_place_accidents
+    > ;
+Loading data to table output_data.hotspot_place_accidents
+OK
+Time taken: 0.361 seconds
+hive> select *from hotspot_place_accidents ;
+OK
+Miami-Dade      FL      Miami   2349
+Harris  TX      Houston 2293
+Los Angeles     CA      Los Angeles     1999
+Mecklenburg     NC      Charlotte       1795
+Dallas  TX      Dallas  1712
+Orange  FL      Orlando 1356
+Travis  TX      Austin  1175
+Wake    NC      Raleigh 1051
+Davidson        TN      Nashville       922
+East Baton Rouge        LA      Baton Rouge     878
+Sacramento      CA      Sacramento      860
+Maricopa        AZ      Phoenix 716
+San Diego       CA      San Diego       707
+Fulton  GA      Atlanta 625
+Hennepin        MN      Minneapolis     598
+Oklahoma        OK      Oklahoma City   523
+Pima    AZ      Tucson  503
+Duval   FL      Jacksonville    495
+Bexar   TX      San Antonio     492
+Santa Clara     CA      San Jose        448
+Time taken: 0.232 seconds, Fetched: 20 row(s)
+hive>
